@@ -1,0 +1,25 @@
+{
+    "packageDirectories": [
+        {
+            "path": "force-app/package",
+            "default": true,
+            "package": "Lightweight - LWC Util",
+            "versionName": "v60.0 - 0.1",
+            "versionNumber": "0.1.0.NEXT",
+            "versionDescription": "A lightweight set of Lightning Web Component Utilities"
+        },
+        {
+            "path": "force-app/package",
+            "default": false,
+            "package": "Lightweight - LWC Util (Unlocked)",
+            "versionName": "v60.0 - 0.1",
+            "versionNumber": "0.1.0.NEXT",
+            "versionDescription": "A lightweight set of Lightning Web Component Utilities"
+        }
+    ],
+    "name": "lightweight-lwc-util",
+    "namespace": "utl",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "60.0",
+    "packageAliases": {}
+}

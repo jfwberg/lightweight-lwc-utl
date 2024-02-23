@@ -1,0 +1,11 @@
+<template>
+    <lightning-modal-header label="Color Picker"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-align_absolute-center">
+            <lightning-input type="color" label="Color" value={color} onchange={handleChange}></lightning-input>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Select Color" onclick={handleClickClose}></lightning-button>
+    </lightning-modal-footer>
+</template>
