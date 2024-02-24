@@ -1,13 +1,16 @@
 /**
- * @description Class representing a lightning data table.
- *              Use this when you dynamically get data from Apex that needs to be represented
- *              as a lightning data table. This leaves apex in control of the data and columns.
- * @note        It's a bit of a big OTT class, but it will the job just fine when serializing it to JSON
- * @note        Use the toJSON() method in order to deal with the class reserved key word.
+ * @author         Justus van den Berg (jfwberg@gmail.com)
+ * @date           Feb 2024
+ * @copyright      (c) 2024 Justus van den Berg
+ * @license        MIT (See LICENSE file in the project root)
+ * @description    Class representing a lightning data table.
+ *                 Use this when you dynamically get data from Apex that needs to be represented
+ *                 as a lightning data table. This leaves apex in control of the data and columns.
+ * @note           It's a bit of a big OTT class, but it will the job just fine when serializing it to JSON
+ * @note           Use the toJSON() method in order to deal with the class reserved key word.
  */
 global with sharing class Ldt {
 
-   
 
     /** **************************************************************************************************** **
      **                                           GLOBAL VARIABLES                                           **
@@ -33,6 +36,9 @@ global with sharing class Ldt {
     global static final Map<String,String> DC_FIELD_TYPE_MAPPING = new Map<String,String>{
 
     };
+
+    // (Error) messages
+    @TestVisible private static final String INVALID_COLUMN_TYPE_MSG = 'Invalid column type';
 
 
     /** **************************************************************************************************** **
@@ -67,7 +73,7 @@ global with sharing class Ldt {
      *              the "_x" from the variables named "class" (reserverd key word)
      */
     global String toJSON(){
-        return JSON.serialize(this).replaceAll('_x', '');
+        return JSON.serialize(this,true).replaceAll('_x', '');
     }
     
     /** **************************************************************************************************** **
@@ -148,7 +154,7 @@ global with sharing class Ldt {
         @AuraEnabled global Integer        initialWidth;
         @AuraEnabled global String         label;
         @AuraEnabled global Boolean        sortable;        
-        @AuraEnabled global String         type = 'text';
+        @AuraEnabled global String         type;
         @AuraEnabled global TypeAttributes typeAttributes;
         @AuraEnabled global Boolean        wrapText;
 
@@ -157,12 +163,13 @@ global with sharing class Ldt {
          **                                         GLOBAL CONSTRUCTORS                                          **
          ** **************************************************************************************************** **/
         global Col(String label, String fieldName){
-            this.label = label;
+            this.label     = label;
             this.fieldName = fieldName;
+            this.setType('text');
         }
 
         global Col(String label, String fieldName, String type){
-            this.label = label;
+            this.label     = label;
             this.fieldName = fieldName;
             this.setType(type);
         }
@@ -171,24 +178,23 @@ global with sharing class Ldt {
         /** **************************************************************************************************** **
          **                                        GLOBAL SETTER METHODS                                         **
          ** **************************************************************************************************** **/
+        global Col setCellAttributes(CellAttributes cellAttributes){
+            this.cellAttributes = cellAttributes;
+            return this;
+        }
+
         global Col setColumnKey(String columnKey){
             this.columnKey = columnKey;
             return this;
         }
 
-        global Col setType(String type){
-            if(!(new Set<String>{   'action','boolean','button','button-icon','currency','date','date-local',
-                                    'email','location','number','percent','phone','text','url',
-                                    'salesforceLogoIcon','userIcon'
-            }).contains(type)){
-                throw new StringException('Invalid column type');
-            }
-            this.type = type;
+        global Col setEditable(Boolean editable){
+            this.editable = editable;
             return this;
         }
 
-        global Col setInitialWidth(Integer initialWidth){
-            this.initialWidth = initialWidth;
+        global Col setFieldName(String fieldName){
+            this.fieldName = fieldName;
             return this;
         }
 
@@ -197,15 +203,51 @@ global with sharing class Ldt {
             return this;
         }
 
-        global Col setTypeAttributes(TypeAttributes typeAttributes){
-            this.typeAttributes = typeAttributes;
+        global Col setHideDefaultActions(Boolean setHideDefaultActions){
+            this.hideDefaultActions = hideDefaultActions;
             return this;
         }
 
-        global Col setCellAttributes(CellAttributes cellAttributes){
-            this.cellAttributes = cellAttributes;
+        global Col setHideLabel(Boolean hideLabel){
+            this.hideLabel = hideLabel;
             return this;
         }
+
+        global Col setIconName(String iconName){
+            this.iconName = iconName;
+            return this;
+        }
+
+        global Col setInitialWidth(Integer initialWidth){
+            this.initialWidth = initialWidth;
+            return this;
+        }
+
+        global Col setLabel(String label){
+            this.label = label;
+            return this;
+        }
+
+        global Col setSortable(Boolean sortable){
+            this.sortable = sortable;
+            return this;
+        }
+
+        global Col setType(String type){
+            if(!(new Set<String>{   'action','boolean','button','button-icon','currency','date','date-local',
+                                    'email','location','number','percent','phone','text','url',
+                                    'salesforceLogoIcon','userIcon'
+            }).contains(type)){
+                throw new StringException(INVALID_COLUMN_TYPE_MSG);
+            }
+            this.type = type;
+            return this;
+        }
+
+        global Col setTypeAttributes(TypeAttributes typeAttributes){
+            this.typeAttributes = typeAttributes;
+            return this;
+        } 
     }
 
 
@@ -232,7 +274,7 @@ global with sharing class Ldt {
             return this;
         }
 
-        global CellAttributes iconName(String iconName){
+        global CellAttributes setIconName(String iconName){
             this.iconName = new FieldName(iconName);
             return this;
         }
@@ -315,8 +357,8 @@ global with sharing class Ldt {
         **                                        GLOBAL SETTER METHODS                                         **
         ** **************************************************************************************************** **/
         /** *************************** CUSTOM *************************** **/
-        global TypeAttributes setColor(String fieldName){
-            this.color = new FieldName(fieldName);
+        global TypeAttributes setColor(String color){
+            this.color = new FieldName(color);
             return this;
         }
 
@@ -335,8 +377,8 @@ global with sharing class Ldt {
         }
 
         /** *************************** BUTTONS *************************** **/
-        global TypeAttributes setDisabled(Boolean value){
-            this.disabled = value;
+        global TypeAttributes setDisabled(Boolean disabled){
+            this.disabled = disabled;
             return this;
         }
 
