@@ -6,10 +6,70 @@ A lightweight Lightning Web Component Utility library for common javascript func
 |---|---|
 |Name|Lightweight - LWC Util|
 |Version|0.1.0-1|
-|Managed Installation URL | */packaging/installPackage.apexp?p0=* |
-|Unlocked Installation URL| */packaging/installPackage.apexp?p0=* |
+|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000O4TtIAK* |
+|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000O5MjIAK* |
 
-## Lightning Data Table
+# Javascript Functions
+## Utility functions
+```javascript
+// Import the custom Utils, only import what you require in your code
+import {handleError, copyTextToClipboard, handleDownload, selectText, removePreAndPostFix} from 'utl/util';
+
+// Outputs a lightning alert with a javascript or Apex error message
+handleError(error);
+
+// Copies text to the clipboard
+copyTextToClipboard(content);
+
+// Create a file download when you click on a certain link
+handleDownload(template, fileName, fileExtension, mimeType, content, addTimestamp);
+
+// Selects text inside an element for easy copy and paste
+selectText(element)
+
+// Remove the field pre-and postfix i.e. utl__Field_Name__c will become Field_Name
+removePreAndPostFix(str)
+```
+## Modal functions
+The utility also has a number of modals for outputting data. You can use one of the below examples
+ 
+```javascript
+// Modals
+import ldtModal         from "utl/ldtModal";
+import textModal        from "utl/textModal";
+import colorPickerModal from "utl/colorPickerModal";
+
+// The color modal returns the color code (#CCCCCC) on close for you handle
+async handleOpenColorPickerModal(color) {
+    const colorCode = await colorPickerModal.open({
+        color: color,
+        size: 'small'
+    });
+    
+    // If all went well, udate the color
+    if(colorCode !== undefined){
+        this.youMethod(colorCode);
+    }
+}
+
+// The Lightning Datatable Modal does not require any callback by default as it is for outputting a table
+handleOpenLdtModal(header, ldt){
+    ldtModal.open({
+        header : header,
+        ldt: ldt
+    });
+}
+
+// The Text Modal does not require any callback by default as it is for outputting lightning formatted text
+handleOpenTextModal(header, content){
+    textModal.open({
+        header : header,
+        content: content
+    });
+}
+```
+
+# Lightning - Datatable Classes
 The ```utl.Ldt``` class has the purpose of representing a full lightning data table object. It's goal is create both the data and the columns in Apex instead of half in Apex half in Javascript.
 
 We can argue where where this action belongs... In my opinion if you generate *dynamic* tables and need to send the header and type information from Apex to be stiched together in Javascript, you should do it fully in Apex.
@@ -22,6 +82,78 @@ All methods wit hthe exception of the toJSON() method return the full class so y
 
 For data time values see the formatted documentation https://developer.salesforce.com/docs/component-library/bundle/lightning-formatted-date-time/specification
 
+## HTML Implementation
+```html
+<utl-extended-datatable 
+    key-field               = {ldt.keyField} 
+    data                    = {ldt.data} 
+    columns                 = {ldt.columns}
+    hide-checkbox-column    = {ldt.hideCheckboxColumn}
+    show-row-number-column  = {ldt.showRowNumberColumn}
+    onrowaction             = {handleRowAction}
+></utl-extended-datatable>
+```
+
+## Javscript Implementation Example
+```javascript
+// Custom Utils
+import {handleError} from 'utl/util';
+
+// Apex Classes
+import getTable      from '@salesforce/apex/YourClass.getTable';
+
+// Loading indicator
+loading = false;
+
+// Lightning data table
+ldt = {};
+
+// Method that calls an apex Method that returns a Lightning Data Table Object (utl.Ldt)
+handleGetTable(){
+    try{
+        this.loading = true;
+
+        // Execute apex
+        getTable()
+        .then(apexResponse => {
+            // Set the table to the response
+            this.ldt = apexResponse;
+        })
+        .catch(error => {
+            handleError(error);
+        })
+        .finally(()=>{
+            this.loading = false;
+        });
+    }catch(error){
+        handleError(error);
+    }finally{
+        this.loading = false;
+    }
+}
+```
+## Apex ult.Ldt Example
+This is an example of what the Apex LWC controller could look like. See full details below.
+```java
+@AuraEnabled
+public static utl.Ldt getTable(){
+    try {
+
+        // Create a key value pair table
+        utl.Ldt ldt = new utl.Ldt()
+            .setupKeyValue()
+            .addKeyValuePair('Key 01','Key 01')
+            .addKeyValuePair('Key 02','Key 02')
+        ;
+
+        // Return the data table
+        return ldt;
+        
+    } catch (Exception e) {
+        throw new AuraHandledException(e.getMessage());
+    }
+}
+```
 
 ## Lightning Datatable (utl.Ldt) Methods
 |Method|Data Type|Description|
@@ -47,70 +179,70 @@ For data time values see the formatted documentation https://developer.salesforc
 |Method|Data Type|Description|
 |--------|-------------|---|
 |```setCellAttributes(CellAttributes cellAttributes)```    | utl.Ldt.Col | Method to add cell attributes to a column. See the details on the *utl.Ldt.CellAttributes* class below
-|```setColumnKey(String columnKey)```                      | utl.Ldt.Col | 
-|```setEditable(Boolean editable)```                       | utl.Ldt.Col | 
-|```setFieldName(String fieldName)```                      | utl.Ldt.Col | 
-|```setFixedWidth(Integer fixedWidth)```                   | utl.Ldt.Col |
-|```setHideDefaultActions(Boolean setHideDefaultActions)```| utl.Ldt.Col | 
-|```setHideLabel(Boolean hideLabel)```                     | utl.Ldt.Col | 
-|```setIconName(String setIconName)```                     | utl.Ldt.Col | 
-|```setInitialWidth(Integer initialWidth)```               | utl.Ldt.Col |
-|```setLabel(String label)```                              | utl.Ldt.Col | 
-|```setSortable(Boolean sortable)```                       | utl.Ldt.Col | 
-|```setType(String type)```                                | utl.Ldt.Col |
+|```setColumnKey(String columnKey)```                      | utl.Ldt.Col | Setter for columnKey variable
+|```setEditable(Boolean editable)```                       | utl.Ldt.Col | Setter for editable variable
+|```setFieldName(String fieldName)```                      | utl.Ldt.Col | Setter for fieldName variable
+|```setFixedWidth(Integer fixedWidth)```                   | utl.Ldt.Col | Setter for fixedWidth variable
+|```setHideDefaultActions(Boolean setHideDefaultActions)```| utl.Ldt.Col | Setter for setHideDefaultActions variable
+|```setHideLabel(Boolean hideLabel)```                     | utl.Ldt.Col | Setter for hideLabel variable
+|```setIconName(String setIconName)```                     | utl.Ldt.Col | Setter for setIconName variable
+|```setInitialWidth(Integer initialWidth)```               | utl.Ldt.Col | Setter for initialWidth variable
+|```setLabel(String label)```                              | utl.Ldt.Col | Setter for label variable
+|```setSortable(Boolean sortable)```                       | utl.Ldt.Col | Setter for sortable variable
+|```setType(String type)```                                | utl.Ldt.Col | Setter for type variable
 |```setTypeAttributes(TypeAttributes typeAttributes)```    | utl.Ldt.Col | Method to add type attributes to a column. See the details on the *utl.Ldt.TypeAttributes* class below
 
 
 ## Lightning Datatable CellAttributes (utl.Ldt.CellAttributes) Methods
 |Method|Data Type|Description|
 |--------|-------------|---|
-|```setAlignment(String alignment)```                       | utl.Ldt.CellAttributes |
-|```setClass(String class_x)```                             | utl.Ldt.CellAttributes |
-|```setIconName(String iconName)```                         | utl.Ldt.CellAttributes |
-|```setIconLabel(String iconLabel)```                       | utl.Ldt.CellAttributes |
-|```setIconPosition(String iconPosition)```                 | utl.Ldt.CellAttributes |
-|```setIconAlternativeText(String iconAlternativeText)```   | utl.Ldt.CellAttributes |
+|```setAlignment(String alignment)```                       | utl.Ldt.CellAttributes | Setter for alignment variable
+|```setClass(String class_x)```                             | utl.Ldt.CellAttributes | Setter for class variable
+|```setIconName(String iconName)```                         | utl.Ldt.CellAttributes | Setter for iconName variable
+|```setIconLabel(String iconLabel)```                       | utl.Ldt.CellAttributes | Setter for iconLabel variable
+|```setIconPosition(String iconPosition)```                 | utl.Ldt.CellAttributes | Setter for iconPosition variable
+|```setIconAlternativeText(String iconAlternativeText)```   | utl.Ldt.CellAttributes | Setter for iconAlternativeText variable
 
 
 ## Lightning Datatable TypeAttributes (utl.Ldt.TypeAttributes) Methods
 |Method|Data Type|Description|
 |--------|-------------|---|
-|```setColor(String color)```                                       | utl.Ldt.TypeAttributes |
-|```setMenuAlignment(String menuAlignment)```                       | utl.Ldt.TypeAttributes |
+|```setColor(String color)```                                       | utl.Ldt.TypeAttributes | Setter for color variable
+|```setMenuAlignment(String menuAlignment)```                       | utl.Ldt.TypeAttributes | Setter for menuAlignment variable
 |```addRowAction(RowAction rowAction```                             | utl.Ldt.TypeAttributes | Method to add a row action to the actions column. See the details on the *utl.Ldt.RowAction* class below
-|```setDisabled(Boolean disabled)```                                | utl.Ldt.TypeAttributes |
-|```setIconName(String iconName)```                                 | utl.Ldt.TypeAttributes |
-|```setIconPosition(String iconPosition)```                         | utl.Ldt.TypeAttributes |
-|```setName(String name)```                                         | utl.Ldt.TypeAttributes |
-|```setLabel(String label)```                                       | utl.Ldt.TypeAttributes |
-|```setTitle(String title)```                                       | utl.Ldt.TypeAttributes |
-|```setVariant(String variant)```                                   | utl.Ldt.TypeAttributes |
-|```setIconClass(String iconClass)```                               | utl.Ldt.TypeAttributes |
-|```setAlternativeText(String alternativeText)```                   | utl.Ldt.TypeAttributes |
-|```setClass(String class_x)```                                     | utl.Ldt.TypeAttributes |
-|```setCurrencyCode(String currencyCode)```                         | utl.Ldt.TypeAttributes |
-|```setMinimumIntegerDigits(Integer minimumIntegerDigits)```        | utl.Ldt.TypeAttributes |
-|```setMinimumFractionDigits(Integer minimumFractionDigits)```      | utl.Ldt.TypeAttributes |
-|```setMaximumFractionDigits(Integer maximumFractionDigits)```      | utl.Ldt.TypeAttributes |
-|```setMinimumSignificantDigits(Integer minimumSignificantDigits)```| utl.Ldt.TypeAttributes |
-|```setMaximumSignificantDigits(Integer maximumSignificantDigits)```| utl.Ldt.TypeAttributes |
-|```setStep(Decimal step)```                                        | utl.Ldt.TypeAttributes |
-|```setDay(String day)```                                           | utl.Ldt.TypeAttributes |
-|```setEra(String era)```                                           | utl.Ldt.TypeAttributes |
-|```setHour(String hour)```                                         | utl.Ldt.TypeAttributes |
-|```setHour12(String hour12)```                                     | utl.Ldt.TypeAttributes |
-|```setMinute(String minute)```                                     | utl.Ldt.TypeAttributes |
-|```setMonth(String month)```                                       | utl.Ldt.TypeAttributes |
-|```setSecond(String second)```                                     | utl.Ldt.TypeAttributes |
-|```setTimeZone(String timeZone)```                                 | utl.Ldt.TypeAttributes |
-|```setTimeZoneName(String timeZoneName)```                         | utl.Ldt.TypeAttributes |
-|```setWeekday(String weekday)```                                   | utl.Ldt.TypeAttributes |
-|```setYear(String year)```                                         | utl.Ldt.TypeAttributes |
-|```setLatitude(Decimal latitude)```                                | utl.Ldt.TypeAttributes |
-|```setLongitude(Decimal longitude))```                             | utl.Ldt.TypeAttributes |
-|```setLinkify(Boolean linkify)```                                  | utl.Ldt.TypeAttributes |
-|```setTooltip(String fieldName)```                                 | utl.Ldt.TypeAttributes |
-|```setTarget(String target)```                                     | utl.Ldt.TypeAttributes |
+|```setDisabled(Boolean disabled)```                                | utl.Ldt.TypeAttributes | Setter for disabled variable
+|```setIconName(String iconName)```                                 | utl.Ldt.TypeAttributes | Setter for iconName variable
+|```setIconPosition(String iconPosition)```                         | utl.Ldt.TypeAttributes | Setter for iconPosition variable
+|```setName(String name)```                                         | utl.Ldt.TypeAttributes | Setter for name variable
+|```setLabel(String label)```                                       | utl.Ldt.TypeAttributes | Setter for label variable
+|```setTitle(String title)```                                       | utl.Ldt.TypeAttributes | Setter for title variable
+|```setVariant(String variant)```                                   | utl.Ldt.TypeAttributes | Setter for variant variable
+|```setIconClass(String iconClass)```                               | utl.Ldt.TypeAttributes | Setter for iconClass variable
+|```setAlternativeText(String alternativeText)```                   | utl.Ldt.TypeAttributes | Setter for alternativeText variable
+|```setClass(String class_x)```                                     | utl.Ldt.TypeAttributes | Setter for class_x variable
+|```setCurrencyCode(String currencyCode)```                         | utl.Ldt.TypeAttributes | Setter for currencyCode variable
+|```setMinimumIntegerDigits(Integer minimumIntegerDigits)```        | utl.Ldt.TypeAttributes | Setter for minimumIntegerDigits variable
+|```setMinimumFractionDigits(Integer minimumFractionDigits)```      | utl.Ldt.TypeAttributes | Setter for minimumFractionDigits variable
+|```setMaximumFractionDigits(Integer maximumFractionDigits)```      | utl.Ldt.TypeAttributes | Setter for maximumFractionDigits variable
+|```setMinimumSignificantDigits(Integer minimumSignificantDigits)```| utl.Ldt.TypeAttributes | Setter for minimumSignificantDigits variable
+|```setMaximumSignificantDigits(Integer maximumSignificantDigits)```| utl.Ldt.TypeAttributes | Setter for maximumSignificantDigits variable
+|```setStep(Decimal step)```                                        | utl.Ldt.TypeAttributes | Setter for step variable
+|```setDay(String day)```                                           | utl.Ldt.TypeAttributes | Setter for day variable
+|```setEra(String era)```                                           | utl.Ldt.TypeAttributes | Setter for era variable
+|```setHour(String hour)```                                         | utl.Ldt.TypeAttributes | Setter for hour variable
+|```setHour12(String hour12)```                                     | utl.Ldt.TypeAttributes | Setter for hour12 variable
+|```setMinute(String minute)```                                     | utl.Ldt.TypeAttributes | Setter for minute variable
+|```setMonth(String month)```                                       | utl.Ldt.TypeAttributes | Setter for month variable
+|```setSecond(String second)```                                     | utl.Ldt.TypeAttributes | Setter for second variable
+|```setTimeZone(String timeZone)```                                 | utl.Ldt.TypeAttributes | Setter for timeZone variable
+|```setTimeZoneName(String timeZoneName)```                         | utl.Ldt.TypeAttributes | Setter for timeZoneName variable
+|```setWeekday(String weekday)```                                   | utl.Ldt.TypeAttributes | Setter for weekday variable
+|```setYear(String year)```                                         | utl.Ldt.TypeAttributes | Setter for year variable
+|```setLatitude(Decimal latitude)```                                | utl.Ldt.TypeAttributes | Setter for latitude variable
+|```setLongitude(Decimal longitude))```                             | utl.Ldt.TypeAttributes | Setter for longitude variable
+|```setLinkify(Boolean linkify)```                                  | utl.Ldt.TypeAttributes | Setter for linkify variable
+|```setTooltip(String fieldName)```                                 | utl.Ldt.TypeAttributes | Setter for fieldName variable
+|```setTarget(String target)```                                     | utl.Ldt.TypeAttributes | Setter for target variable
 
 
 ## Lightning Datatable FieldName (utl.Ldt.FieldName) Constructors
@@ -213,3 +345,4 @@ utl.Ldt ldt = new utl.Ldt()
     )
 ;
 ```
+

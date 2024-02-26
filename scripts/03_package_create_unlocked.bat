@@ -9,8 +9,8 @@ SET packageDescription=A lightweight set of Lightning Web Component Utilities
 SET packagePath=force-app/package
 
 REM Package Config
-SET packageId=
-SET packageVersionId=
+SET packageId=0HoP300000000XtKAI
+SET packageVersionId=04tP3000000O5MjIAK
 
 REM Create package
 sf package create --name "%packageName%" --description "%packageDescription%" --package-type "%packageType%" --path "%packagePath%" --target-dev-hub %devHub%

@@ -8,7 +8,6 @@
 // Lightning stuff
 import   LightningAlert     from 'lightning/alert';
 
-
 /** **************************************************************************************************** **
  **                                           SUPPORT METHODS                                            **
  ** **************************************************************************************************** **/
@@ -70,11 +69,22 @@ export function handleDownload(template, fileName, fileExtension, mimeType, cont
 
 
 /**
- * Method to select text when you click on it 
+ * Method that selects the a text on click for easy copying
  */
-export function selectText(el){
-
+export function selectText(element){
+	if (document.body.createTextRange){ 
+		var range = document.body.createTextRange();
+		range.moveToElementText(element);
+		range.select();
+	}else if (window.getSelection){
+		var selection = window.getSelection();
+		var range = document.createRange();
+		range.selectNodeContents(element);
+		selection.removeAllRanges();
+		selection.addRange(range);
+	}
 }
+
 
 /**
  * Method to remove the namespace prefix and the __c or any type of the fields
