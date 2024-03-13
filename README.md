@@ -1,6 +1,9 @@
 # Lightweight - LWC Util
 A lightweight Lightning Web Component Utility library for common javascript functions and generating ```lightning-datatable``` data structures with both data and columns.
 
+## Blog (Datatable)
+https://medium.com/@justusvandenberg/create-lightning-web-component-datatable-columns-using-apex-4f305ca8d9bb
+
 ## Package Info
 | Info | Value |
 |---|---|
