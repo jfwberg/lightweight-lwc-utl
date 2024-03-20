@@ -8,9 +8,9 @@ https://medium.com/@justusvandenberg/create-lightning-web-component-datatable-co
 | Info | Value |
 |---|---|
 |Name|Lightweight - LWC Util|
-|Version|0.1.0-1|
-|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000O4TtIAK* |
-|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000O5MjIAK* |
+|Version|0.2.0-1|
+|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000QiLaIAK* |
+|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000QnebIAC* |
 
 # Javascript Functions
 ## Utility functions
@@ -39,7 +39,9 @@ The utility also has a number of modals for outputting data. You can use one of 
 ```javascript
 // Modals
 import ldtModal         from "utl/ldtModal";
+import multiLdtModal    from "utl/multiLdtModal";
 import textModal        from "utl/textModal";
+import textareaModal    from "utl/textareaModal";
 import colorPickerModal from "utl/colorPickerModal";
 
 // The color modal returns the color code (#CCCCCC) on close for you handle
@@ -70,7 +72,67 @@ handleOpenTextModal(header, content){
         content: content
     });
 }
+
+// The 
+handleOpenTextareaModal(){
+    textareaModal.open({
+        
+        // Modal info / content and if the textarea is disabled
+        size             : 'small',
+        label            : 'Modal label',
+        content          : this.textareaContent,
+        disabled         : false,
+        
+        // Download info
+        fileName         : 'DataGraph',
+        fileExtension    : '.json',
+        fileMimeType     : 'application/json; charset=utf-8;',
+        includeTimestamp : true,
+        
+        // Button visibillity for all types of buttones
+        copyButton       : true,
+        downloadButton   : true,
+        prettifyButton   : true,    // Only works for JSON
+        closeButton      : true
+    });
+}catch(error){
+    handleError(error);
+}
+
+// Method to open a Modal with multiple data tables, see Apex below
+handleOpenMultiLdtModal(){
+        try{
+            multiLdtModal.open({
+                header    : "Detailed Data Graph Metadata",
+                tableList : this.dataTables,
+                size      : 'medium'
+            });
+        }catch(error){
+            handleError(error);
+        }
+    }
+    
 ```
+
+```java
+/**
+ * Example of multiple data tables and their (optional) header that are going to
+ * be displayed using the multiLdtModal
+ */
+List<Map<String, Object>> dataTables = new List<Map<String, Object>>{
+    new Map<String, Object>{
+        'key'    => '1',
+        'header' => 'Table 01',
+        'ldt'    => new utl.Ldt()
+    },
+    new Map<String, Object>{
+        'key'    => '2', 
+        'header' => 'Table 02',
+        'ldt'    => new utl.Ldt()
+    }
+}
+```
+
 
 # Lightning - Datatable Classes
 The ```utl.Ldt``` class has the purpose of representing a full lightning data table object. It's goal is create both the data and the columns in Apex instead of half in Apex half in Javascript.

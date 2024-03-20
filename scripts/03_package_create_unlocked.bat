@@ -6,11 +6,12 @@ REM Package Create Config
 SET devHub=devHubAlias
 SET packageName=Lightweight - LWC Util (Unlocked)
 SET packageDescription=A lightweight set of Lightning Web Component Utilities
+SET packageType=Unlocked
 SET packagePath=force-app/package
 
 REM Package Config
 SET packageId=0HoP300000000XtKAI
-SET packageVersionId=04tP3000000O5MjIAK
+SET packageVersionId=04tP3000000QnebIAC
 
 REM Create package
 sf package create --name "%packageName%" --description "%packageDescription%" --package-type "%packageType%" --path "%packagePath%" --target-dev-hub %devHub%

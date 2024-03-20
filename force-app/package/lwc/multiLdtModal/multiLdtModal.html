@@ -1,0 +1,22 @@
+<template>
+    <lightning-modal-header label={header}></lightning-modal-header>
+    <lightning-modal-body>
+        <lightning-modal-body>
+            <template for:each={tableList} for:item="table">
+                <div key={table.key} class="slds-text-heading_small slds-p-vertical_x-small">{table.header}</div>
+                <lightning-datatable
+                    key                     = {table.key}            
+                    key-field               = {table.ldt.keyField} 
+                    data                    = {table.ldt.data} 
+                    columns                 = {table.ldt.columns}
+                    hide-checkbox-column    = {table.ldt.hideCheckboxColumn}
+                    show-row-number-column  = {table.ldt.showRowNumberColumn}
+                ></lightning-datatable>
+                <br key={table.key}/>
+            </template>
+        </lightning-modal-body>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Close" onclick={handleClickClose}></lightning-button>
+    </lightning-modal-footer>
+</template>
