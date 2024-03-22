@@ -8,9 +8,9 @@ https://medium.com/@justusvandenberg/create-lightning-web-component-datatable-co
 | Info | Value |
 |---|---|
 |Name|Lightweight - LWC Util|
-|Version|0.2.0-1|
-|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000QiLaIAK* |
-|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000QnebIAC* |
+|Version|0.3.0-1|
+|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000R7F7IAK* |
+|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000R7GjIAK* |
 
 # Javascript Functions
 ## Utility functions

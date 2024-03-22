@@ -64,11 +64,11 @@ export default class TextareaModal extends LightningModal {
             copyTextToClipboard(this.content);
             
             // Change color to green
-            this.variant = 'success';
+            this.copyVariant = 'success';
 
         }catch(error){
             // Change color to red
-            this.variant = 'destructive';
+            this.copyVariant = 'destructive';
             handleError(error);
         }finally{
             this.loading = false;
