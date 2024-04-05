@@ -8,9 +8,9 @@ https://medium.com/@justusvandenberg/create-lightning-web-component-datatable-co
 | Info | Value |
 |---|---|
 |Name|Lightweight - LWC Util|
-|Version|0.3.0-1|
-|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000R7F7IAK* |
-|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000R7GjIAK* |
+|Version|0.4.0-2|
+|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000SkG1IAK* |
+|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000SkHdIAK* |
 
 # Javascript Functions
 ## Utility functions
@@ -132,6 +132,12 @@ List<Map<String, Object>> dataTables = new List<Map<String, Object>>{
     }
 }
 ```
+
+# Codemirror Methods
+In version 4.0 the code editor plugin "Codemirror" version 5.65.16 last updated at 20-11-2023 has been added as a lightweight implementation for LWC.
+I have no idea if it is implemented correctly, but it seems to work pretty well. I ported this when LWC just was released and never really updated it since besides the version. It's pretty cool though and works well, but don't judge the code too much.
+
+[**Documentation update to follow soon**]
 
 
 # Lightning - Datatable Classes

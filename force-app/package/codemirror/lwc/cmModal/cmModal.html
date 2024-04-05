@@ -1,0 +1,26 @@
+<template>
+    <lightning-modal-header label={header}></lightning-modal-header>
+    
+    <!-- Codemirror textarea -->
+    <div class="slds-modal__content hideOverflow">
+        <c-cm-textarea
+            onloadingcomplete = {loadingComplete}
+            onsave            = {save}
+            disabled          = {disabled}
+            value             = {value} 
+            theme             = {theme}
+            mode              = {mode} 
+            class             = "ta"
+        ></c-cm-textarea>
+    </div>
+    
+    <lightning-modal-footer>
+        <lightning-button-group>
+            <lightning-button label="Prettify" onclick={handleClickPrettify} variant={prettifyVariant} lwc:if={prettifyButton}></lightning-button>
+            <lightning-button label="Download" onclick={handleClickDownload} variant={downloadVariant} lwc:if={downloadButton}></lightning-button>
+            <lightning-button label="Copy"     onclick={handleClickCopy}     variant={copyVariant}     lwc:if={copyButton}>    </lightning-button>
+            <lightning-button label="Close"    onclick={handleClickClose}    variant="neutral"         lwc:if={closeButton}>   </lightning-button>
+        </lightning-button-group>
+    </lightning-modal-footer>
+
+</template>
