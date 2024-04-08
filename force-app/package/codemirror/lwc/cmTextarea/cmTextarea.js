@@ -11,41 +11,31 @@ import codemirror                from '@salesforce/resourceUrl/codemirror';
 // Main class
 export default class CodeMirrorTextArea extends LightningElement {
     
-    // CodeMirror instance
-    cm;
+    // CodeMirror instance, public so you can modify it from parent components
+    @api cm;
     
     // Indicator if the loading has completed and the component is added in the DOM
     loaded = false;
 
     // Default values
     _theme		= 'default';
-    _value		= '';
     _mode		= 'application/javascript';
+    _value		= '';
+    _size       = {width: "100%", height : 300};
     _disabled	= false;
-    _height		= 400;
-    _width		= "100%";
 
-    // Returns the classes for the code handler
-    // You can modify this for customized resize bars
-    get handleClass(){
-        return 'awb-code-editor_handle awb-code-editor_handle-default';
-    }
-    
-    
+
     /**
      * THEME
      */
-    @api
-    get theme(){
-        return this._theme;
+    @api get theme(){
+        return this.cm.getOption('theme');
     }
     set theme(value){
         this._theme = value;
         this.setTheme(value);
     }
-
-    @api
-    setTheme(value){
+    @api setTheme(value){
         if(this.loaded){
             this.cm.setOption('theme',value);
         }
@@ -53,30 +43,10 @@ export default class CodeMirrorTextArea extends LightningElement {
 
 
     /**
-     * VALUE
-     */
-    @api 
-    get value(){
-        return this.cm.getValue();
-    }
-    set value(value){
-        this._value = value;
-        this.setValue(value);
-    }
-    @api
-    setValue(value){
-        if(this.loaded){
-            this.cm.setValue(value);
-        }
-    }
-
-
-    /**
      * MODE
      */
-    @api 
-    get mode(){
-        return this._mode;
+    @api get mode(){
+        return this.cm.getOption('mode');
     }
     set mode(value){
         this._mode = value;
@@ -93,27 +63,52 @@ export default class CodeMirrorTextArea extends LightningElement {
     /**
      * SIZE
      */
-    @api 
-    setSize(width,height){
-        this._width = width;
-        this._height = height;
-        this.cm.setSize(width,height);
+    @api get size(){
+        return this._size;
     }
-    
+    set size(value){
+        this._size.width  = value.width;
+        this._size.height = value.height;
+        this.setSize(value);
+    }
+    @api setSize(value){
+        if(this.loaded){
+            this.cm.setSize(value.width, value.height);
+        }
+    }
+
+  
+    /**
+     * VALUE
+     */
+    @api get value(){
+        return this.cm.getValue();
+    }
+    set value(value){
+        this._value = value;
+        this.setValue(value);
+    }
+
+    @api
+    setValue(value){
+        if(this.loaded){
+            this.cm.setValue(value);
+        }
+    }
+
 
     /**
      * DISABLED
      */
-    @api 
-    get disabled(){
-        return this._disabled;
+    @api get disabled(){
+        return this.cm.getOption('readOnly');
     }
     set disabled(value){
         this._disabled = value;
+        this.setDisabled(value);
     }
-
-    @api
-    setDisabled(value){
+    
+    @api setDisabled(value){
         if(this.loaded){
             this.cm.setOption('readOnly',value);
         }
@@ -121,56 +116,9 @@ export default class CodeMirrorTextArea extends LightningElement {
 
 
     /**
-     * FORMATTING METHODS
-     */
-    getSelectedRange() {
-         return { 
-             from : this.cm.getCursor(true),
-             to   : this.cm.getCursor(false)
-         };
-    }
-
-    @api getSelection(){
-        return this.cm.getSelection();
-    }
-
-    @api autoFormatSelection() {
-        var range = this.getSelectedRange();
-        this.cm.autoFormatRange(range.from, range.to);
-    }
-    
-    @api commentSelection(isComment) {
-        var range = this.getSelectedRange();
-        this.cm.commentRange(isComment, range.from, range.to);
-    }
-
-    @api selectAll() {
-        this.cm.selectAll();
-    }
-
-    @api execCommand(obj) {
-        this.cm.execCommand(obj);
-    }
-
-    @api insertString(str){
-    
-        if(this.cm.getSelection().length>0){
-            this.cm.replaceSelection(str);
-        }else{
-            var doc = this.cm.getDoc();
-            var cursor = doc.getCursor();
-            var pos = {
-               line: cursor.line,
-               ch: cursor.ch
-            }
-            doc.replaceRange(str, pos);
-        }
-    }
-
-    /**
      * Run execute on control + S
      */
-    handleKeyDown(event){
+    handleSave(event){
         if ((event.key === 83 || event.keyCode === 83) && (event.metaKey || event.ctrlKey)){
           
             // Stop broswer default
@@ -196,7 +144,7 @@ export default class CodeMirrorTextArea extends LightningElement {
 
     // Calculate the new height
     on_drag(e){
-        this.cm.setSize(null, Math.max(0, (this.start_h + e.y - this.start_y)) );
+        this.size = {width : this._size.width , height : Math.max(0, (this.start_h + e.y - this.start_y))};
     }
 
     on_release() {
@@ -247,6 +195,7 @@ export default class CodeMirrorTextArea extends LightningElement {
                 loadScript(this, codemirror + '/mode/markdown/markdown.js'),
                 loadScript(this, codemirror + '/mode/sql/sql.js'),
                 loadScript(this, codemirror + '/mode/csv/csv.js'),
+                loadScript(this, codemirror + '/mode/yaml/yaml.js'),
 
                 // ADD-ONS
                 loadScript(this, codemirror + '/addon/dialog/dialog.js'),
@@ -305,8 +254,8 @@ export default class CodeMirrorTextArea extends LightningElement {
                     },
                     value : this._value,
                     size  : { 
-                        width: this._width,
-                        height: this._height
+                        width : this._size.width,
+                        height: this._size.height
                     }
                 });
 
@@ -315,7 +264,7 @@ export default class CodeMirrorTextArea extends LightningElement {
 
                 // Initially you have to set the default values as the editor does not yet exists, so API value has to be set afer render
                 // Note: the loaded variable needs to be set to true to render the editor first
-                this.setSize(this._width, this._height);
+                this.setSize(this._size.width, this._size.height);
 
                 // Dispatch event so you can tell the parent the code has loaded completely
                 this.dispatchEvent(new CustomEvent('loadingcomplete'));

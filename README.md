@@ -140,6 +140,83 @@ I have no idea if it is implemented correctly, but it seems to work pretty well.
 [**Documentation update to follow soon**]
 
 
+
+
+```javascript
+// Internal indicator that code mirror has loaded in the child component
+codemirrorLoaded	= false;
+
+// CodeMirror textarea Always set some default values
+codemirrorClass     = 'ta';
+codemirrorTheme		= 'default';
+codemirrorMode		= 'text/x-markdown';
+codemirrorValue		= '';
+codemirrorSize      = {width: "100%", height : 250};
+codemirrorDisabled	= false;
+codemirrorSave      = () => {};
+codemirrorLoadingComplete = () => {this.codemirrorLoaded = true;}
+
+
+// Textarea methods are used for commonly used Codemirror settings
+// Get access to the textarea methods, single textarea
+this.template.querySelector('c-cm-textarea').setMode('text/x-java');
+
+// Get access to the text area methods, multiple textareas can be set by class name
+this.template.querySelector('.textareaClass').setMode('text/x-java');
+
+// Full access to the CodeMirror instance, this gives you full control
+let cm = this.template.querySelector('.textareaClass').cm;
+cm.setOption('mode','text/x-java');
+```
+
+```html
+<!-- Theme picklist -->
+<c-cm-theme-picklist 
+    value        = {codemirrorTheme}
+    onvaluechange= {handleThemeChange}
+    variant      = ""
+    label        = "Editor Theme"
+></c-cm-theme-picklist>
+
+<!-- Mode picklist -->
+<c-cm-mode-picklist
+    value         = {codemirrorMode}
+    onvaluechange = {handleModeChange}
+    variant       = ""
+    label         = "Editor Mode (Language)"
+></c-cm-mode-picklist>
+
+<!-- Example of a CM Textarea in a form component -->
+<div class="slds-var-p-around_small">
+    <div class="slds-form-element">
+        <label class="slds-form-element__label" for="cm-ta">SQL Query</label>
+        <div class="slds-form-element__control">
+            <div class="slds-box cm-ta" id="cm-ta">
+                <c-cm-textarea
+                    class             = {codemirrorClass}
+                    theme             = {codemirrorTheme}
+                    mode              = {codemirrorMode} 
+                    size              = {codemirrorSize}
+                    value             = {codemirrorValue} 
+                    disabled          = {codemirrorDisabled}
+                    onsave            = {codemirrorSave}
+                    onloadingcomplete = {codemirrorLoadingComplete}
+                ></c-cm-textarea>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+```css
+/* CSS for the CM Textarea
+.cm-ta{
+    padding     : 0px !important;
+    border-color: #747474 !important;
+}
+```
+
+
 # Lightning - Datatable Classes
 The ```utl.Ldt``` class has the purpose of representing a full lightning data table object. It's goal is create both the data and the columns in Apex instead of half in Apex half in Javascript.
 
