@@ -4,9 +4,18 @@
       "path": "force-app/package",
       "default": true,
       "package": "Lightweight - LWC Util",
-      "versionName": "v60.0 - 0.4",
-      "versionNumber": "0.4.0.NEXT",
-      "ancestorVersion": "0.3.0",
+      "versionName": "v60.0 - 0.6",
+      "versionNumber": "0.6.0.NEXT",
+      "ancestorVersion": "0.5.0",
+      "versionDescription": "A lightweight set of Lightning Web Component Utilities"
+    },
+    {
+      "path": "force-app/package",
+      "default": false,
+      "package": "Lightweight - LWC Util (Unlocked)",
+      "versionName": "v60.0 - 0.6",
+      "versionNumber": "0.6.0.NEXT",
+      "ancestorVersion": "0.4.0",
       "versionDescription": "A lightweight set of Lightning Web Component Utilities"
     }
   ],
@@ -20,6 +29,14 @@
     "Lightweight - LWC Util@0.2.0-1": "04tP3000000QiLaIAK",
     "Lightweight - LWC Util@0.3.0-1": "04tP3000000R7F7IAK",
     "Lightweight - LWC Util@0.4.0-1": "04tP3000000SkEPIA0",
-    "Lightweight - LWC Util@0.4.0-2": "04tP3000000SkG1IAK"
+    "Lightweight - LWC Util@0.4.0-2": "04tP3000000SkG1IAK",
+    "Lightweight - LWC Util@0.5.0-1": "04tP3000000T7J3IAK",
+    "Lightweight - LWC Util@0.6.0-1": "04tP3000000T7ZBIA0",
+    "Lightweight - LWC Util (Unlocked)": "0HoP300000000XtKAI",
+    "Lightweight - LWC Util (Unlocked)@0.1.0-1": "04tP3000000O5MjIAK",
+    "Lightweight - LWC Util (Unlocked)@0.2.0-1": "04tP3000000QnebIAC",
+    "Lightweight - LWC Util (Unlocked)@0.3.0-1": "04tP3000000R7GjIAK",
+    "Lightweight - LWC Util (Unlocked)@0.4.0-1": "04tP3000000SkHdIAK",
+    "Lightweight - LWC Util (Unlocked)@0.6.0-1": "04tP3000000T7cPIAS"
   }
 }

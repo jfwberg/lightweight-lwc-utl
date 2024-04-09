@@ -8,9 +8,9 @@ https://medium.com/@justusvandenberg/create-lightning-web-component-datatable-co
 | Info | Value |
 |---|---|
 |Name|Lightweight - LWC Util|
-|Version|0.4.0-2|
-|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000SkG1IAK* |
-|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000SkHdIAK* |
+|Version|0.6.0-2|
+|Managed Installation URL | */packaging/installPackage.apexp?p0=04tP3000000T7ZBIA0* |
+|Unlocked Installation URL| */packaging/installPackage.apexp?p0=04tP3000000T7cPIAS* |
 
 # Javascript Functions
 ## Utility functions
@@ -38,6 +38,7 @@ The utility also has a number of modals for outputting data. You can use one of 
  
 ```javascript
 // Modals
+import cmModal          from "utl/cmModal";
 import ldtModal         from "utl/ldtModal";
 import multiLdtModal    from "utl/multiLdtModal";
 import textModal        from "utl/textModal";
@@ -209,7 +210,7 @@ cm.setOption('mode','text/x-java');
 ```
 
 ```css
-/* CSS for the CM Textarea
+/* CSS for the CM Textarea */
 .cm-ta{
     padding     : 0px !important;
     border-color: #747474 !important;

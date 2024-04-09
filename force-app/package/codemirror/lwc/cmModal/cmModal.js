@@ -7,10 +7,6 @@ import {handleError}         from 'c/util';
 import {handleDownload}      from 'c/util';
 import {copyTextToClipboard} from 'c/util';
 
-// Codemirror utils
-import {cmExists   }         from 'c/cmUtil';
-import {setCmValue }         from 'c/cmUtil';
-import {getCmValue }         from 'c/cmUtil';
 
 // Main class
 export default class CmModal extends LightningModal {
@@ -41,9 +37,7 @@ export default class CmModal extends LightningModal {
     
     // Default on loading complete function
     @api loadingComplete = ()=>{
-        if(cmExists(this.template, this.codemirrorClass)){
-            this.codemirrorLoaded = true;
-        }
+        this.codemirrorLoaded = true;
     };
 
     // Download info
@@ -57,6 +51,11 @@ export default class CmModal extends LightningModal {
     @api downloadButton   = false;
     @api prettifyButton   = false;
     @api closeButton      = false;
+
+    // Method to get the CodeMirror Textarea Child component
+    getCmTa(){
+        return this.template.querySelector('c-cm-textarea');
+    }
     
 
     /** **************************************************************************************************** **
@@ -71,7 +70,7 @@ export default class CmModal extends LightningModal {
         try{
             this.loading = true;
 
-            copyTextToClipboard(getCmValue(this.template, this.codemirrorClass));
+            copyTextToClipboard(this.getCmTa().value);
             
             // Change color to green
             this.copyVariant = 'success';
@@ -95,7 +94,7 @@ export default class CmModal extends LightningModal {
                 this.fileName,
                 this.fileExtension,
                 this.fileMimeType,
-                getCmValue(this.template, this.codemirrorClass),
+                this.getCmTa().value,
                 true
             );
 
@@ -121,12 +120,8 @@ export default class CmModal extends LightningModal {
             this.prettifyVariant = 'success';
             
             // Make it pretty            
-            setCmValue(
-                this.template,
-                this.codemirrorClass,
-                JSON.stringify(JSON.parse(getCmValue(this.template, this.codemirrorClass)),null,4)
-            );
-
+            this.getCmTa().value = JSON.stringify(JSON.parse(this.getCmTa().value),null,4);
+            
         }catch(error){
             // Change color to red
             this.prettifyVariant = 'destructive';
